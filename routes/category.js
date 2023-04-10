@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 const jsend = require("jsend");
 const db = require("../models");
-const TodoService = require("../services/todoService");
-const todoService = new TodoService(db);
+const CategoryService = require("../services/categoryService");
+const categoryService = new CategoryService(db);
 const bodyParser = require("body-parser");
 const jsonParser = bodyParser.json();
 const jwt = require("jsonwebtoken");
@@ -15,16 +15,15 @@ router.get("/", async (req, res, next) => {
   if (token) {
     try {
       const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
-      const todos = await todoService.getAll();
-      if (todos.length == 0) {
+      const categories = await categoryService.getAll();
+      if (categories.length == 0) {
         return res.jsend.success({
-          message:
-            "There are no todos currently in the list. Create one to view it later.",
+          message: "There are no categories available to view!",
         });
       }
       return res.jsend.success({
-        result: "Here is the list of all current todo-items.",
-        data: todos,
+        result: "Here is the list of all categories.",
+        data: categories,
       });
     } catch (error) {
       return res.jsend.fail({
@@ -38,13 +37,13 @@ router.get("/", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
-  const { name, category } = req.body;
+  const { name } = req.body;
   const token = req.headers.authorization?.split(" ")[1];
   if (token) {
     try {
-      if (name == null || category == null) {
+      if (name == null) {
         return res.jsend.fail({
-          message: "Please provide a name and a category!",
+          message: "Please provide a name for the category!",
         });
       }
       if (!isNaN(name)) {
@@ -52,15 +51,10 @@ router.post("/", async (req, res, next) => {
           message: "The provided name needs to be a string!",
         });
       }
-      if (isNaN(category)) {
-        return res.jsend.fail({
-          message: "The provided category needs to be an integer!",
-        });
-      }
       const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
-      await todoService.create(name, category, decodedToken.id);
+      await categoryService.create(name);
       return res.jsend.success({
-        message: "New item created!",
+        message: "New category created!",
       });
     } catch (error) {
       return res.jsend.fail({
@@ -81,7 +75,7 @@ router.put("/", async (req, res, next) => {
     try {
       if (oldName == null || newName == null) {
         return res.jsend.fail({
-          message: "Please provide a the item to update, and the new name!",
+          message: "Please provide a category to update, and the new name!",
         });
       }
       if (!isNaN(oldName) || !isNaN(newName)) {
@@ -90,13 +84,13 @@ router.put("/", async (req, res, next) => {
         });
       }
       const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
-      const todo = await todoService.getOne(oldName);
-      if (todo == null) {
-        return res.jsend.fail({ message: "No such todo-item exists!" });
+      const category = await categoryService.getOne(oldName);
+      if (category == null) {
+        return res.jsend.fail({ message: "No such category exists!" });
       }
-      await todoService.update(oldName, newName);
+      await categoryService.update(oldName, newName);
       return res.jsend.success({
-        message: "Item updated",
+        message: "Category updated",
       });
     } catch (error) {
       return res.jsend.fail({
@@ -117,7 +111,7 @@ router.delete("/", async (req, res, next) => {
     try {
       if (name == null) {
         return res.jsend.fail({
-          message: "Please provide the name of a todo-item!",
+          message: "Please provide the name of a category!",
         });
       }
       if (!isNaN(name)) {
@@ -126,13 +120,13 @@ router.delete("/", async (req, res, next) => {
         });
       }
       const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
-      const todo = await todoService.getOne(name);
-      if (todo == null) {
-        return res.jsend.fail({ message: "No such todo-item exists!" });
+      const category = await categoryService.getOne(name);
+      if (category == null) {
+        return res.jsend.fail({ message: "No such category exists!" });
       }
-      await todoService.delete(name);
+      await categoryService.delete(name);
       return res.jsend.success({
-        message: "Item deleted",
+        message: "Category deleted",
       });
     } catch (error) {
       return res.jsend.fail({
