@@ -42,6 +42,11 @@ router.post("/", async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (token) {
     try {
+      if (name == null || category == null) {
+        return res.jsend.fail({
+          message: "Please provide a name and a category!",
+        });
+      }
       if (!isNaN(name)) {
         return res.jsend.fail({
           message: "The provided name needs to be a string!",
@@ -74,6 +79,11 @@ router.put("/", async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (token) {
     try {
+      if (oldName == null || newName == null) {
+        return res.jsend.fail({
+          message: "Please provide a the item to update, and the new name!",
+        });
+      }
       if (!isNaN(oldName) || !isNaN(newName)) {
         return res.jsend.fail({
           message: "The provided name needs to be a string!",
@@ -105,6 +115,11 @@ router.delete("/", async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (token) {
     try {
+      if (name == null) {
+        return res.jsend.fail({
+          message: "Please provide the name of a todo-item!",
+        });
+      }
       if (!isNaN(name)) {
         return res.jsend.fail({
           message: "The provided name needs to be a string!",

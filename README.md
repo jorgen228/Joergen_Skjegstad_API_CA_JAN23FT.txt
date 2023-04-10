@@ -38,3 +38,5 @@ No additional libraries or packages are nessecary.
 NodeJS version: v16.17.0
 
 # POSTMAN Documentation link
+
+https://documenter.getpostman.com/view/25198376/2s93XtzjzF
