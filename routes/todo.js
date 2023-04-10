@@ -17,22 +17,22 @@ router.get("/", async (req, res, next) => {
       const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
       const todos = await todoService.getAll();
       if (todos.length == 0) {
-        res.jsend.success({
+        return res.jsend.success({
           message:
             "There are no todos currently in the list. Create one to view it later.",
         });
       }
-      res.jsend.success({
+      return res.jsend.success({
         result: "Here is the list of all current todo-items.",
         data: todos,
       });
     } catch (error) {
-      res.jsend.success({
-        error: error,
+      return res.jsend.fail({
+        error: "Invalid Jsonwebtoken.",
       });
     }
   }
-  res.jsend.success({
+  return res.jsend.fail({
     message: "You need to be logged in to utilise this feature!",
   });
 });
@@ -55,15 +55,15 @@ router.post("/", async (req, res, next) => {
       const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
       await todoService.create(name, category, decodedToken.id);
       res.jsend.success({
-        result: "New item created!",
+        message: "New item created!",
       });
     } catch (error) {
-      res.jsend.success({
+      res.jsend.fail({
         error: error,
       });
     }
   } else {
-    return res.jsend.success({
+    return res.jsend.fail({
       message: "You need to be logged in to utilise this feature!",
     });
   }
@@ -86,15 +86,15 @@ router.put("/", async (req, res, next) => {
       }
       await todoService.update(oldName, newName);
       return res.jsend.success({
-        result: "Item updated",
+        message: "Item updated",
       });
     } catch (error) {
-      return res.jsend.success({
+      return res.jsend.fail({
         error: error,
       });
     }
   } else {
-    return res.jsend.success({
+    return res.jsend.fail({
       message: "You need to be logged in to utilise this feature!",
     });
   }
@@ -117,15 +117,15 @@ router.delete("/", async (req, res, next) => {
       }
       await todoService.delete(name);
       return res.jsend.success({
-        result: "Item deleted",
+        message: "Item deleted",
       });
     } catch (error) {
-      return res.jsend.success({
+      return res.jsend.fail({
         error: error,
       });
     }
   } else {
-    return res.jsend.success({
+    return res.jsend.fail({
       message: "You need to be logged in to utilise this feature!",
     });
   }
