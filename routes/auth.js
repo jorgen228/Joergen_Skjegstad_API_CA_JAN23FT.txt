@@ -22,17 +22,63 @@ router.post("/signup", async (req, res, next) => {
   if (password == null) {
     return res.jsend.fail({ password: "Password is required!" });
   }
-  const user = await userService.getOne(email);
+  var user = await userService.getOne(email);
   if (user != null) {
     return res.jsend.fail({ email: "The provided email is already in use!" });
   }
-  const salt = crypto.randomBytes(16);
-  crypto.pbkdf2(password, salt, 31000, 32, "sha256", (err, hashedPasword) => {
+  var salt = crypto.randomBytes(16);
+  crypto.pbkdf2(password, salt, 310000, 32, "sha256", (err, hashedPasword) => {
     if (err) {
       return next(err);
     }
     userService.create(name, email, hashedPasword, salt);
     res.jsend.success({ result: "You created a new user." });
+  });
+});
+
+router.post("/login", jsonParser, async (req, res, next) => {
+  const { email, password } = req.body;
+  if (email == null) {
+    return res.jsend.fail({ email: "Email is required!" });
+  }
+  if (password == null) {
+    return res.jsend.fail({ password: "Password is required!" });
+  }
+  userService.getOne(email).then((data) => {
+    if (data == null) {
+      return res.jsend.fail({ result: "Inncorrect email!" });
+    }
+    crypto.pbkdf2(
+      password,
+      data.salt,
+      310000,
+      32,
+      "sha256",
+      (err, hashedPassword) => {
+        if (err) {
+          return next(err);
+        }
+        if (!crypto.timingSafeEqual(data.encryptedPassword, hashedPassword)) {
+          return res.jsend.fail({ result: "Inncorrect password!" });
+        }
+        let token;
+        try {
+          token = jwt.sign(
+            { id: data.id, email: data.email },
+            process.env.TOKEN_SECRET,
+            { expiresIn: "1h" }
+          );
+        } catch (err) {
+          res.jsend.error("Something went wrong with creating JWT token");
+        }
+        res.jsend.success({
+          result: "You are logged in",
+          id: data.id,
+          email: data.Email,
+          token: token,
+        });
+      }
+    );
   });
 });
 

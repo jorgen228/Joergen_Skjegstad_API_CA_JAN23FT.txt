@@ -6,16 +6,16 @@ class UserService {
 
   async getOne(email) {
     return this.User.findOne({
-      where: { Email: email },
+      where: { email: email },
     });
   }
 
   async create(name, email, encryptedPassword, salt) {
     return this.User.create({
-      Name: name,
-      Email: email,
-      EncryptedPassword: encryptedPassword,
-      Salt: salt,
+      name: name,
+      email: email,
+      encryptedPassword: encryptedPassword,
+      salt: salt,
     });
   }
 }
