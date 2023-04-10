@@ -8,9 +8,18 @@ class TodoService {
       where: {},
     });
   }
-  async create(name) {
+  async getOne(name) {
+    return this.Todo.findOne({
+      where: {
+        name: name,
+      },
+    });
+  }
+  async create(name, categoryID, userId) {
     return await this.Todo.create({
       name: name,
+      CategoryId: categoryID,
+      UserId: userId,
     });
   }
   async update(oldname, newName) {
@@ -23,10 +32,10 @@ class TodoService {
       }
     );
   }
-  async delete(id) {
+  async delete(name) {
     return await this.Todo.destroy({
       where: {
-        id: id,
+        name: name,
       },
     });
   }
