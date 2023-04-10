@@ -78,6 +78,6 @@ describe("testing-authorization-routes", () => {
       .set("Authorization", "Bearer " + token + "Thiswillfail");
     expect(body).toHaveProperty("data");
     expect(body.status).toBe("fail");
-    expect(body.data.error).toBe("Invalid Jsonwebtoken.");
+    expect(body.data.error).toBe("Invalid JsonWebtoken.");
   });
 });
