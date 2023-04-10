@@ -1,15 +1,16 @@
 module.exports = (sequelize, Sequelize) => {
-  const Category = sequelize.define('Category', {
-    name: {
-      type: Sequelize.DataTypes.STRING,
+  const Category = sequelize.define(
+    "Category",
+    {
+      name: {
+        type: Sequelize.DataTypes.STRING,
 
-      allowNull: false,
+        allowNull: false,
+      },
     },
-  },
-  {
-    timestamps: false,
-  }
+    {
+      timestamps: false,
+    }
   );
   return Category;
 };
-

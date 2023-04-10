@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define(
-    'User',
+    "User",
     {
       name: {
         type: Sequelize.DataTypes.STRING,
@@ -32,9 +32,11 @@ module.exports = (sequelize, Sequelize) => {
   );
 
   User.associate = function (models) {
-    User.hasMany(models.Todo, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+    User.hasMany(models.Todo, {
+      foreignKey: { allowNull: false },
+      onDelete: "CASCADE",
+    });
   };
 
   return User;
 };
-

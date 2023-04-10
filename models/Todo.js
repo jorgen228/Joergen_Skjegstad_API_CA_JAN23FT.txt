@@ -1,19 +1,23 @@
 module.exports = (sequelize, Sequelize) => {
-  const Todo = sequelize.define('Todo', {
-    name: {
-      type: Sequelize.DataTypes.STRING,
-      allowNull: false,
+  const Todo = sequelize.define(
+    "Todo",
+    {
+      name: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
     },
-  },
-  {
-    timestamps: false,
-  }
+    {
+      timestamps: false,
+    }
   );
 
   Todo.associate = function (models) {
-    Todo.belongsTo(models.Category, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+    Todo.belongsTo(models.Category, {
+      foreignKey: { allowNull: false },
+      onDelete: "CASCADE",
+    });
   };
 
   return Todo;
 };
-
