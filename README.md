@@ -7,6 +7,7 @@ To set up the application:
 1. Create a database in mysql named "myTodo".
 
 2. Run the command: "npm install" to get the required dependencies.
+   The dependencies in need of download are: dotenv, express, jest, jsend, jsonwebtoken, mysql, mysql2, sequelize, and supertest. Make shure you have these by checking the package.json file.
 
 3. Start the application using "npm start".
 

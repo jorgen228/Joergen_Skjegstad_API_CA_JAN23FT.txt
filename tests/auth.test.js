@@ -25,7 +25,6 @@ describe("testing-authorization-routes", () => {
     expect(body).toHaveProperty("data");
     expect(body.data).toHaveProperty("token");
     token = body.data.token;
-    console.log(token);
   });
 
   test("GET /todo - success", async () => {
@@ -63,6 +62,7 @@ describe("testing-authorization-routes", () => {
     expect(body.data.message).toBe("Item deleted");
   });
 
+  // Get request without JWT - token.
   test("GET /todo - fail", async () => {
     const { body } = await request(app).get("/todo");
     expect(body).toHaveProperty("data");
@@ -72,12 +72,13 @@ describe("testing-authorization-routes", () => {
     );
   });
 
+  //Get request with invalid JWT - token.
   test("GET /todo - fail", async () => {
     const { body } = await request(app)
       .get("/todo")
       .set("Authorization", "Bearer " + token + "Thiswillfail");
     expect(body).toHaveProperty("data");
     expect(body.status).toBe("fail");
-    expect(body.data.error).toBe("Invalid JsonWebtoken.");
+    expect(body.data.error).toBe("Invalid Jsonwebtoken.");
   });
 });
